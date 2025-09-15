@@ -1,0 +1,24 @@
+# Компільовані файли
+*.class
+
+# Логи
+*.log
+
+# Тимчасові файли
+*.tmp
+*.temp
+
+# Файли IDE
+*.iml
+/.idea/
+
+# Папки збірки Maven/Gradle
+/target/
+/out/
+/build/
+
+# Mac OS
+.DS_Store
+
+# Windows
+Thumbs.db
