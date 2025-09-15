@@ -22,7 +22,6 @@ This repository contains my educational Java projects, created to practice progr
 - Console-based task manager.  
 - **Features:**
   - Add, edit, and delete tasks
-  - Search and filter tasks
   - Basic handling of dates
 - **Skills practiced:** Collections (ArrayList, LinkedList), sorting, modular code, methods.
 
