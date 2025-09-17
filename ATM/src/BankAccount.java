@@ -5,19 +5,24 @@ import java.time.format.DateTimeFormatter;
 
 public class BankAccount implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String account;
+    private String firstName;
+    private String lastName;
+    private String fullName;
     private String hashedPin;
     private BigDecimal balance;
     private int failedAttempts = 0;
     private boolean isBlocked = false;
     private boolean isDeleted = false;
     private LocalDateTime createdAt;
+    private LocalDateTime blockedAt;
     private LocalDateTime deletedAt;
     private LocalDateTime lastDepositAt;
     private LocalDateTime lastWithdrawAt;
 
-    public BankAccount(String account, String pin, double balance) {
-        this.account = account;
+    public BankAccount(String firstName, String lastName, String pin, double balance) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.fullName = firstName + " " + lastName;
         this.hashedPin = Security.hashPin(pin);
         this.balance = BigDecimal.valueOf(balance).setScale(2, BigDecimal.ROUND_HALF_UP);
         this.createdAt = LocalDateTime.now();
@@ -28,8 +33,16 @@ public class BankAccount implements Serializable {
             this.lastDepositAt = null;
     }
 
-    public String getAccount() {
-        return account;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getFullname(){
+        return fullName;
     }
 
     public boolean checkPin(String inputPin) {
@@ -42,7 +55,7 @@ public class BankAccount implements Serializable {
         } else {
             failedAttempts++;
             if (failedAttempts >= 3) {
-                isBlocked = true;
+                setBlocked(true);
             }
             return false;
         }
@@ -93,18 +106,29 @@ public class BankAccount implements Serializable {
         return isBlocked;
     }
 
+
     public void setBlocked(boolean blocked) {
         this.isBlocked = blocked;
+        if (blocked) {
+            blockedAt = LocalDateTime.now();
+        } else {
+            blockedAt = null;
+        }
     }
 
     public void unblock() {
         isBlocked = false;
         failedAttempts = 0;
+        blockedAt = null;
     }
 
     public String getFormattedCreatedAt() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return createdAt.format(formatter);
+    }
+
+    public String getFormattedBlockedAt() {
+        return blockedAt != null ? blockedAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : "No blocked yet";
     }
 
     public String getFormattedDeletedAt() {

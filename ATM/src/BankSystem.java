@@ -8,7 +8,7 @@ public class BankSystem {
     }
 
     public void addAccount(BankAccount account) {
-        accounts.put(account.getAccount(), account);
+        accounts.put(account.getFullname(), account);
         Storage.saveAccounts(accounts);
     }
 
@@ -20,8 +20,9 @@ public class BankSystem {
         }
     }
 
-    public BankAccount getAccount(String account) {
-        return accounts.get(account);
+    public BankAccount getAccount(String firstName, String lastName) {
+        String fullName = firstName + " " + lastName;
+        return accounts.get(fullName);
     }
 
     public HashMap<String, BankAccount> getAccounts() {

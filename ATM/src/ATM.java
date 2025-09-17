@@ -45,11 +45,15 @@ public class ATM {
     }
 
     private void createAccount() {
-        System.out.print("Enter account name: ");
-        String name = scanner.nextLine();
-        String formattedUsername = Utils.capitalizeFirstLetter(name);
+        System.out.print("Enter your first name: ");
+        String firstName = scanner.nextLine();
+        String formattedFirstName = Utils.capitalizeFirstLetter(firstName);
 
-        if (system.getAccount(formattedUsername) != null) {
+        System.out.print("Enter your last name: ");
+        String lastName = scanner.nextLine();
+        String formattedLastName = Utils.capitalizeFirstLetter(lastName);
+
+        if (system.getAccount(formattedFirstName, formattedLastName) != null) {
             System.out.println("An account with that name already exists!");
             return;
         }
@@ -78,16 +82,23 @@ public class ATM {
             return;
         }
 
-        BankAccount newAccount = new BankAccount(formattedUsername, pin, initialDeposit);
+        BankAccount newAccount = new BankAccount(formattedFirstName, formattedLastName, pin, initialDeposit);
         system.addAccount(newAccount);
         System.out.println("Account created successfully!");
     }
 
     private void login() {
-        System.out.print("Enter account name: ");
-        String name = scanner.nextLine();
-        String formattedUsername = Utils.capitalizeFirstLetter(name);
-        BankAccount account = system.getAccount(formattedUsername);
+        System.out.print("Enter your first name: ");
+        String firstName = scanner.nextLine();
+        String formattedFirstName = Utils.capitalizeFirstLetter(firstName);
+
+        System.out.print("Enter your last name: ");
+        String lastName = scanner.nextLine();
+        String formattedLastName = Utils.capitalizeFirstLetter(lastName);
+
+        String fullName = formattedFirstName + " " + formattedLastName;
+
+        BankAccount account = system.getAccount(formattedFirstName, formattedLastName);
 
         if (account == null) {
             System.out.println("Account not found");
@@ -110,7 +121,7 @@ public class ATM {
             }
 
             if (account.checkPin(pin)) {
-                System.out.println("Welcome, " + formattedUsername + "!");
+                System.out.println("Welcome, " + fullName + "!");
                 Storage.saveAccounts(system.getAccounts());
                 menu(account);
                 return;
@@ -142,7 +153,7 @@ public class ATM {
                 switch (choice) {
                     case "1":
                         System.out.println("\n--- ACCOUNT INFO ---");
-                        System.out.println("Name: " + account.getAccount());
+                        System.out.println("Account: " + account.getFullname());
                         System.out.println("Balance: $" + account.getBalance());
                         System.out.println("Created: " + account.getFormattedCreatedAt());
                         System.out.println("Last deposit: " + account.getFormattedLastDepositAt());
@@ -214,7 +225,7 @@ public class ATM {
                                 confirm = scanner.nextLine().trim().toLowerCase();
 
                                 if (confirm.equals("yes")) {
-                                    system.removeAccount(account.getAccount());
+                                    system.removeAccount(account.getFullname());
                                     System.out.println("Account successfully closed.");
                                     return;
                                 } else if (confirm.equals("no")) {
